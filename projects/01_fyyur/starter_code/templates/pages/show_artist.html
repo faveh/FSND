@@ -38,6 +38,20 @@
 			<i class="fas fa-moon"></i> Not currently seeking performance venues
 		</p>
 		{% endif %}
+		<div>
+			<a href="/artists/{{ artist.id }}/edit">
+				<button class="btn btn-default btn-sm">
+				  Edit
+				</button>
+			</a>
+			  <button
+				id="deleteArtist"
+				data-id="{{ artist.id }}"
+				class="btn btn-default btn-sm"
+			  >
+				Delete
+			  </button>
+		</div>
 	</div>
 	<div class="col-sm-6">
 		<img src="{{ artist.image_link }}" alt="Venue Image" />
@@ -49,8 +63,8 @@
 		{%for show in artist.upcoming_shows %}
 		<div class="col-sm-4">
 			<div class="tile tile-show">
-				<img src="{{ show.venue_image_link }}" alt="Show Venue Image" />
-				<h5><a href="/venues/{{ show.venue_id }}">{{ show.venue_name }}</a></h5>
+				<img src="{{ show.venue.image_link }}" alt="Show Venue Image" />
+				<h5><a href="/venues/{{ show.venue.id }}">{{ show.venue.name }}</a></h5>
 				<h6>{{ show.start_time|datetime('full') }}</h6>
 			</div>
 		</div>
@@ -63,14 +77,28 @@
 		{%for show in artist.past_shows %}
 		<div class="col-sm-4">
 			<div class="tile tile-show">
-				<img src="{{ show.venue_image_link }}" alt="Show Venue Image" />
-				<h5><a href="/venues/{{ show.venue_id }}">{{ show.venue_name }}</a></h5>
+				<img src="{{ show.venue.image_link }}" alt="Show Venue Image" />
+				<h5><a href="/venues/{{ show.venue.id }}">{{ show.venue.name }}</a></h5>
 				<h6>{{ show.start_time|datetime('full') }}</h6>
 			</div>
 		</div>
 		{% endfor %}
 	</div>
 </section>
-
+<script>
+  const deleteArtist = document.getElementById('deleteArtist')
+  deleteArtist.onclick = function(e) {
+    const id = e.target.dataset['id']
+    fetch('/artists/' + id, {
+      method: 'DELETE'
+    }).then(function() {
+		console.log('Artist deleted successfully');
+		window.location = '/artists';
+	})
+	.catch(function(e) {
+	  console.error(e);
+	});
+  }
+</script>
 {% endblock %}
 
